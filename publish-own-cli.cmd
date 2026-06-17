@@ -1,0 +1,1 @@
+dotnet publish ".\demos\20-guarded-cli\GuardedCopilotCli\04 GuardedCopilotCli.csproj" -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o .\publish
