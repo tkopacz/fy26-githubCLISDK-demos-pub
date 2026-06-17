@@ -1,0 +1,38 @@
+@CopilotApi_HostAddress = http://localhost:5078
+@CopilotApi_ApiKey =
+
+GET {{CopilotApi_HostAddress}}/health
+Accept: application/json
+
+###
+
+POST {{CopilotApi_HostAddress}}/api/explain
+Content-Type: application/json
+X-API-Key: {{CopilotApi_ApiKey}}
+
+{
+  "prompt": "Explain async and await in C#.",
+  "language": "csharp"
+}
+
+###
+
+POST {{CopilotApi_HostAddress}}/api/explain/stream
+Content-Type: application/json
+X-API-Key: {{CopilotApi_ApiKey}}
+
+{
+  "prompt": "Explain dependency injection in ASP.NET Core.",
+  "language": "csharp"
+}
+
+###
+
+POST {{CopilotApi_HostAddress}}/api/review
+Content-Type: application/json
+X-API-Key: {{CopilotApi_ApiKey}}
+
+{
+  "code": "public string Echo(string value) => value;",
+  "language": "csharp"
+}

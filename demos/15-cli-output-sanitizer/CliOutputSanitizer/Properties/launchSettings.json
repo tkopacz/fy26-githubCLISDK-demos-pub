@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "02 CliOutputSanitizer": {
+      "commandName": "Project",
+      "workingDirectory": "..\\..\\..\\shared\\CopilotSDK.Shared"
+    }
+  }
+}

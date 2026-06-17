@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CustomTools": {
+      "commandName": "Project",
+      "commandLineArgs": "..\\..\\..\\shared\\CopilotSDK.Shared\\CopilotSDK.Shared.csproj"
+    }
+  }
+}

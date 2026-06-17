@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "UnderTheHood": {
+      "commandName": "Project",
+      "commandLineArgs": "--capture-content"
+    }
+  }
+}

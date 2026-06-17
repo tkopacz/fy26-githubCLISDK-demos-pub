@@ -1,0 +1,42 @@
+<Solution>
+  <Folder Name="/1-Foundations/">
+    <Project Path="demos/01-hello-session/HelloSession/01 HelloSession.csproj" />
+    <Project Path="demos/02-streaming-events/StreamingEvents/StreamingEvents (OPT).csproj" />
+    <Project Path="demos/03-under-the-hood/UnderTheHood/02 UnderTheHood.csproj" />
+  </Folder>
+  <Folder Name="/2-Tools-and-Control/">
+    <Project Path="demos/04-custom-tools/CustomTools/01 CustomTools.csproj" />
+    <Project Path="demos/05-permission-hooks/PermissionHooks/03 PermissionHooks.csproj" />
+    <Project Path="demos/15-cli-output-sanitizer/CliOutputSanitizer/02 CliOutputSanitizer.csproj" />
+    <Project Path="demos/20-guarded-cli/GuardedCopilotCli/04 GuardedCopilotCli.csproj" />
+  </Folder>
+  <Folder Name="/3-Workflows/">
+    <Project Path="demos/06-security-audit/SecurityAudit/SecurityAudit (OPT).csproj" />
+    <Project Path="demos/07-code-review/CodeReview/02 CodeReview.csproj" />
+    <Project Path="demos/08-adr-analyzer/AdrAnalyzer/01 AdrAnalyzer.csproj" />
+    <Project Path="demos/16-workflows/AgentWorkflows/03 AgentWorkflows.csproj" />
+  </Folder>
+  <Folder Name="/4-Advanced/">
+    <Project Path="demos/09-session-resume/SessionResume/SessionResume (OPT).csproj" />
+    <Project Path="demos/18-sdlc-web-review/SdlcWebReview/02 SdlcWebReview.csproj" />
+    <Project Path="demos/19-byok-local-code-review/ByokLocalCodeReview/01 ByokLocalCodeReview.csproj" Id="13fa53d4-9920-4980-8950-2a7a3fa29433" />
+  </Folder>
+  <Folder Name="/4-Advanced/Remote/">
+    <Project Path="demos/17-remote-sessions/RemoteMonitor/RemoteMonitor.csproj" />
+    <Project Path="demos/17-remote-sessions/RemoteServer/RemoteServer.csproj" />
+    <Project Path="demos/17-remote-sessions/RemoteWorker/RemoteWorker.csproj" />
+  </Folder>
+  <Folder Name="/5-MCP (OPT)/">
+    <Project Path="demos/11-mcp-filesystem/McpFilesystem/McpFilesystem.csproj" />
+    <Project Path="demos/12-mcp-github/McpGitHub/McpGitHub.csproj" />
+  </Folder>
+  <Folder Name="/Shared/">
+    <Project Path="shared/CopilotSDK.Shared/CopilotSDK.Shared.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="review20260612.md" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="tests/CopilotSDK.Demos.Tests/CopilotSDK.Demos.Tests.csproj" />
+  </Folder>
+</Solution>
