@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\shared\CopilotSDK.Shared\CopilotSDK.Shared.csproj" />
+  </ItemGroup>
+
+  <!-- SampleVulnerableCode to dane wejściowe dla SDK, nie kod do kompilacji -->
+  <ItemGroup>
+    <Compile Remove="SampleVulnerableCode\**" />
+    <None Include="SampleVulnerableCode\**" />
+  </ItemGroup>
+
+</Project>
