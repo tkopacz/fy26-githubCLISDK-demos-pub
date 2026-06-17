@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\shared\CopilotSDK.Shared\CopilotSDK.Shared.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <!-- SampleProject to dane wejściowe dla MCP, nie kod do kompilacji -->
+  <ItemGroup>
+    <Compile Remove="SampleProject\**" />
+    <None Include="SampleProject\**" />
+    <Content Include="SampleProject\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
