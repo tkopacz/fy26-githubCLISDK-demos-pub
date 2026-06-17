@@ -430,3 +430,5 @@ FodyWeavers.xsd
 *.msm
 *.msp
 publish/
+# Build output binaries (e.g. demo SampleWorkspace exe artifacts)
+*.exe
