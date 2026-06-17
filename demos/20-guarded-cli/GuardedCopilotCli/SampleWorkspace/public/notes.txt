@@ -1,0 +1,2 @@
+To jest publiczny plik testowy.
+Agent moze go odczytac przez read_workspace_file.

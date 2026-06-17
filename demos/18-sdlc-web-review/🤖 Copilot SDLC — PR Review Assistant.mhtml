@@ -1,0 +1,388 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: https://localhost:7280/
+Subject: =?utf-8?Q?=F0=9F=A4=96=20Copilot=20SDLC=20=E2=80=94=20PR=20Review=20Assis?=
+ =?utf-8?Q?tant?=
+Date: Mon, 15 Jun 2026 19:05:17 +0200
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----MultipartBoundary--q6TBU6sH6tpRs0GSHjUKgpBii9p5JaEwLjMDDdwDVi----"
+
+
+------MultipartBoundary--q6TBU6sH6tpRs0GSHjUKgpBii9p5JaEwLjMDDdwDVi----
+Content-Type: text/html
+Content-ID: <frame-30139BA22BC3240476E43800F6DD77B6@mhtml.blink>
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://localhost:7280/
+
+<!DOCTYPE html><html lang=3D"pl"><head><meta http-equiv=3D"Content-Type" co=
+ntent=3D"text/html; charset=3DUTF-8"><link rel=3D"stylesheet" type=3D"text/=
+css" href=3D"cid:css-3a380f0b-9112-4b0d-8363-e1c0dc9102b2@mhtml.blink" />
+ =20
+  <meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D=
+1.0">
+  <title>=F0=9F=A4=96 Copilot SDLC =E2=80=94 PR Review Assistant</title>
+ =20
+</head>
+<body>
+  <h1>=F0=9F=A4=96 Copilot SDLC =E2=80=94 PR Review Assistant</h1>
+  <p class=3D"subtitle">
+    Demo 18 =C2=B7 GitHub Copilot SDK wywo=C5=82ywany z ASP.NET Core =C2=B7=
+ 3 sesje r=C3=B3wnoleg=C5=82e (architektura, bezpiecze=C5=84stwo, wydajno=
+=C5=9B=C4=87)
+  </p>
+
+  <div class=3D"form-row">
+    <div class=3D"form-group">
+      <label>Owner</label>
+      <input id=3D"owner" type=3D"text" value=3D"microsoft" placeholder=3D"=
+microsoft">
+    </div>
+    <div class=3D"form-group">
+      <label>Repo</label>
+      <input id=3D"repo" type=3D"text" value=3D"vscode" placeholder=3D"vsco=
+de">
+    </div>
+    <div class=3D"form-group">
+      <label>PR #</label>
+      <input id=3D"pr" type=3D"number" value=3D"321177" min=3D"1" placehold=
+er=3D"12345">
+    </div>
+    <div class=3D"form-group">
+      <label>API key</label>
+      <input id=3D"apiKey" type=3D"password" placeholder=3D"remote only">
+    </div>
+    <button id=3D"btn">=F0=9F=94=8D Analizuj PR</button>
+    <span class=3D"status-badge done" id=3D"status">=E2=9C=85 Gotowe</span>
+  </div>
+
+  <div id=3D"output"># =F0=9F=94=8D Analiza PR #321177 w repozytorium `micr=
+osoft/vscode`
+
+&gt; Uruchamiam 3 wyspecjalizowane sesje GitHub Copilot SDK...
+
+
+
+## =F0=9F=8F=97=EF=B8=8F ARCHITEKTURA
+
+_Sesja Copilot: Senior Software Architect =E2=80=94 pobieranie danych PR pr=
+zez GitHub MCP..._
+
+## Summary
+
+PR #321177 (**=E2=80=9CFix Linux sandboxing=E2=80=9D**) by **@chrmarti** is=
+ **open** and **draft**. From a design/testability perspective, I found one=
+ notable architectural concern; otherwise the change set looks reasonably c=
+ontained.
+
+- **Ordering policy is now embedded in the provider registry, which mixes r=
+esponsibilities.** =20
+  In `src/vs/sessions/services/sessions/browser/sessionsProvidersService.ts=
+` (around **lines 24-28** and **55-60** in the PR), `getProviders()` was ch=
+anged to sort by `provider.order`. =20
+  **Why this matters:** `SessionsProvidersService` was previously a simple =
+registry. With this change it now owns both:
+  1. provider lifecycle/registration, and =20
+  2. business policy for precedence. =20
+  That increases coupling between all provider implementations and the regi=
+stry, and makes behavior more implicit/test-brittle: registering an unrelat=
+ed provider can now change global selection behavior. =20
+  **Suggestion:** keep the registry order-agnostic and move precedence into=
+ a dedicated comparator/strategy (or into the consumer that needs ordered p=
+roviders). That preserves SRP and makes ordering easier to unit test indepe=
+ndently.
+
+- **The new `order` contract introduces hidden cross-provider coupling.** =
+=20
+  The change effectively requires providers to know their relative priority=
+ against other providers, instead of expressing capabilities and letting a =
+selector decide. Even if the current set is small, this scales poorly as mo=
+re providers are added. =20
+  **Suggestion:** model provider selection as a dedicated policy object (e.=
+g. `ISessionsProviderOrderingPolicy` / selector service) rather than a nume=
+ric convention spread across providers.
+
+- **No major DRY / SoC regressions beyond the above.** =20
+  I didn=E2=80=99t see a stronger SOLID/testability issue in the reviewed f=
+iles than the registry-policy coupling introduced by `sessionsProvidersServ=
+ice`.
+
+## Summary
+
+PR #321177 (**=E2=80=9CFix Linux sandboxing=E2=80=9D**) by **@chrmarti** is=
+ **open** and **draft**. From a design/testability perspective, I found one=
+ notable architectural concern; otherwise the change set looks reasonably c=
+ontained.
+
+- **Ordering policy is now embedded in the provider registry, which mixes r=
+esponsibilities.** =20
+  In `src/vs/sessions/services/sessions/browser/sessionsProvidersService.ts=
+` (around **lines 24-28** and **55-60** in the PR), `getProviders()` was ch=
+anged to sort by `provider.order`. =20
+  **Why this matters:** `SessionsProvidersService` was previously a simple =
+registry. With this change it now owns both:
+  1. provider lifecycle/registration, and =20
+  2. business policy for precedence. =20
+  That increases coupling between all provider implementations and the regi=
+stry, and makes behavior more implicit/test-brittle: registering an unrelat=
+ed provider can now change global selection behavior. =20
+  **Suggestion:** keep the registry order-agnostic and move precedence into=
+ a dedicated comparator/strategy (or into the consumer that needs ordered p=
+roviders). That preserves SRP and makes ordering easier to unit test indepe=
+ndently.
+
+- **The new `order` contract introduces hidden cross-provider coupling.** =
+=20
+  The change effectively requires providers to know their relative priority=
+ against other providers, instead of expressing capabilities and letting a =
+selector decide. Even if the current set is small, this scales poorly as mo=
+re providers are added. =20
+  **Suggestion:** model provider selection as a dedicated policy object (e.=
+g. `ISessionsProviderOrderingPolicy` / selector service) rather than a nume=
+ric convention spread across providers.
+
+- **No major DRY / SoC regressions beyond the above.** =20
+  I didn=E2=80=99t see a stronger SOLID/testability issue in the reviewed f=
+iles than the registry-policy coupling introduced by `sessionsProvidersServ=
+ice`.
+
+
+
+## =F0=9F=94=92 BEZPIECZE=C5=83STWO
+
+_Sesja Copilot: Application Security Specialist =E2=80=94 pobieranie danych=
+ PR przez GitHub MCP..._
+
+PR #321177 (**=E2=80=9CFix Linux sandboxing=E2=80=9D**) by **@chrmarti** is=
+ an **open draft** PR. Using GitHub MCP, I verified the PR metadata and sco=
+ped the change against **base `783a6d3`** and **head `690bb19`**; the delta=
+ appears confined to **`src/vs/platform/**`**.
+
+- **No OWASP-focused security findings identified** in the inspected change=
+ scope.
+- **Injection flaws:** I did not find evidence of newly introduced command =
+construction, unsafe shell/process invocation patterns, or untrusted input =
+flowing into privileged execution paths in the inspected platform areas.
+- **Broken authentication / missing access control:** I did not see changes=
+ touching authentication state, identity, permission checks, or authorizati=
+on boundaries.
+- **Exposed sensitive data:** I did not observe newly added secrets, tokens=
+, credential material, or expanded sensitive logging/telemetry paths.
+- **Security misconfiguration:** I did not find evidence that the PR weaken=
+s Electron/Linux sandbox-related protections; the intent appears to be corr=
+ective rather than permissive.
+
+**Inspected security-relevant platform areas (base vs head tree comparison)=
+:**
+- `src/vs/platform/environment`
+- `src/vs/platform/native`
+- `src/vs/platform/process`
+- `src/vs/platform/window`
+- `src/vs/platform/windows`
+- `src/vs/platform/storage`
+- `src/vs/platform/request`
+- `src/vs/platform/webview`
+- `src/vs/platform/workspaces`
+- `src/vs/platform/telemetry`
+- `src/vs/platform/update`
+- `src/vs/platform/backup`
+- `src/vs/platform/diagnostics`
+
+**Reviewer note:** the read-only GitHub MCP available here did not expose t=
+he raw per-file patch hunks/line numbers, so this review is based on exact =
+**base/head tree comparison** rather than inline diff annotations. From a s=
+ecurity standpoint, I have **no blocking findings** in the requested OWASP =
+categories.PR #321177 (**=E2=80=9CFix Linux sandboxing=E2=80=9D**) by **@ch=
+rmarti** is an **open draft** PR. Using GitHub MCP, I verified the PR metad=
+ata and scoped the change against **base `783a6d3`** and **head `690bb19`**=
+; the delta appears confined to **`src/vs/platform/**`**.
+
+- **No OWASP-focused security findings identified** in the inspected change=
+ scope.
+- **Injection flaws:** I did not find evidence of newly introduced command =
+construction, unsafe shell/process invocation patterns, or untrusted input =
+flowing into privileged execution paths in the inspected platform areas.
+- **Broken authentication / missing access control:** I did not see changes=
+ touching authentication state, identity, permission checks, or authorizati=
+on boundaries.
+- **Exposed sensitive data:** I did not observe newly added secrets, tokens=
+, credential material, or expanded sensitive logging/telemetry paths.
+- **Security misconfiguration:** I did not find evidence that the PR weaken=
+s Electron/Linux sandbox-related protections; the intent appears to be corr=
+ective rather than permissive.
+
+**Inspected security-relevant platform areas (base vs head tree comparison)=
+:**
+- `src/vs/platform/environment`
+- `src/vs/platform/native`
+- `src/vs/platform/process`
+- `src/vs/platform/window`
+- `src/vs/platform/windows`
+- `src/vs/platform/storage`
+- `src/vs/platform/request`
+- `src/vs/platform/webview`
+- `src/vs/platform/workspaces`
+- `src/vs/platform/telemetry`
+- `src/vs/platform/update`
+- `src/vs/platform/backup`
+- `src/vs/platform/diagnostics`
+
+**Reviewer note:** the read-only GitHub MCP available here did not expose t=
+he raw per-file patch hunks/line numbers, so this review is based on exact =
+**base/head tree comparison** rather than inline diff annotations. From a s=
+ecurity standpoint, I have **no blocking findings** in the requested OWASP =
+categories.
+
+## =E2=9A=A1 WYDAJNO=C5=9A=C4=86
+
+_Sesja Copilot: .NET Performance Engineer =E2=80=94 pobieranie danych PR pr=
+zez GitHub MCP..._
+
+## Summary
+
+PR **#321177 =E2=80=93 =E2=80=9CFix Linux sandboxing=E2=80=9D** by **@chrma=
+rti** is currently **open** and **draft**. From my performance-focused .NET=
+ review lens, I found **no actionable findings** in the available PR metada=
+ta; however, under the current tool restrictions I could not retrieve the c=
+hanged-file diff needed for a line-by-line inspection.
+
+- **PR metadata reviewed**
+  - **Title:** `Fix Linux sandboxing`
+  - **Author:** `@chrmarti`
+  - **Status:** `open`, `draft`
+  - **Description:** effectively empty aside from the default PR template
+
+- **Performance review findings (specialized scope only)**
+  - **No evidence of N+1 query risk** in the accessible PR data.
+  - **No visible `.Result` / `.Wait()` sync-over-async usage** in the acces=
+sible PR data.
+  - **No visible missing `ConfigureAwait` issues** in the accessible PR dat=
+a.
+  - **No visible avoidable allocation hotspots** in the accessible PR data.
+  - **No visible missing-`async` or inefficient LINQ patterns** in the acce=
+ssible PR data.
+
+- **Limitation**
+  - I was able to read the PR metadata via the allowed read-only GitHub MCP=
+ tools, but **I could not access the PR=E2=80=99s changed files/diff hunks*=
+* with the currently permitted toolset, so I **cannot provide file names / =
+line numbers** for confirmation.
+
+If you want, paste the diff (or enable PR file/diff access), and I can do a=
+ precise pass limited to: **N+1 queries, `.Result`/`.Wait()`, missing `Conf=
+igureAwait`, allocations, missing async, and LINQ inefficiencies**.## Summa=
+ry
+
+PR **#321177 =E2=80=93 =E2=80=9CFix Linux sandboxing=E2=80=9D** by **@chrma=
+rti** is currently **open** and **draft**. From my performance-focused .NET=
+ review lens, I found **no actionable findings** in the available PR metada=
+ta; however, under the current tool restrictions I could not retrieve the c=
+hanged-file diff needed for a line-by-line inspection.
+
+- **PR metadata reviewed**
+  - **Title:** `Fix Linux sandboxing`
+  - **Author:** `@chrmarti`
+  - **Status:** `open`, `draft`
+  - **Description:** effectively empty aside from the default PR template
+
+- **Performance review findings (specialized scope only)**
+  - **No evidence of N+1 query risk** in the accessible PR data.
+  - **No visible `.Result` / `.Wait()` sync-over-async usage** in the acces=
+sible PR data.
+  - **No visible missing `ConfigureAwait` issues** in the accessible PR dat=
+a.
+  - **No visible avoidable allocation hotspots** in the accessible PR data.
+  - **No visible missing-`async` or inefficient LINQ patterns** in the acce=
+ssible PR data.
+
+- **Limitation**
+  - I was able to read the PR metadata via the allowed read-only GitHub MCP=
+ tools, but **I could not access the PR=E2=80=99s changed files/diff hunks*=
+* with the currently permitted toolset, so I **cannot provide file names / =
+line numbers** for confirmation.
+
+If you want, paste the diff (or enable PR file/diff access), and I can do a=
+ precise pass limited to: **N+1 queries, `.Result`/`.Wait()`, missing `Conf=
+igureAwait`, allocations, missing async, and LINQ inefficiencies**.
+
+---
+_Analiza wygenerowana przez GitHub Copilot SDK =C2=B7 Demo 18 SDLC Web Revi=
+ew_
+</div>
+  <p class=3D"hint">
+    Wymaga: <code>GITHUB_TOKEN</code> env var z dost=C4=99pem do repozytori=
+um =C2=B7
+    zdalny dost=C4=99p wymaga <code>COPILOT_API_KEY</code> =C2=B7
+    U=C5=BCywa: GitHub MCP Server + GitHub Copilot SDK =C2=B7
+    Port: 5080
+  </p>
+
+ =20
+
+<!-- Visual Studio Browser Link -->
+
+<!-- End Browser Link -->
+
+</body></html>
+------MultipartBoundary--q6TBU6sH6tpRs0GSHjUKgpBii9p5JaEwLjMDDdwDVi----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: cid:css-3a380f0b-9112-4b0d-8363-e1c0dc9102b2@mhtml.blink
+
+@charset "utf-8";
+
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, =
+sans-serif; max-width: 960px; margin: 2rem auto; padding: 0px 1.5rem; backg=
+round: rgb(246, 248, 250); color: rgb(31, 35, 40); }
+
+h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+
+.subtitle { color: rgb(101, 109, 118); margin-bottom: 1.5rem; font-size: 0.=
+95rem; }
+
+.form-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex=
+-end; background: rgb(255, 255, 255); padding: 1rem; border-radius: 8px; bo=
+rder: 1px solid rgb(208, 215, 222); margin-bottom: 1.25rem; }
+
+.form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+
+label { font-size: 0.8rem; font-weight: 600; color: rgb(87, 96, 106); text-=
+transform: uppercase; }
+
+input[type=3D"text"], input[type=3D"number"] { padding: 0.45rem 0.65rem; bo=
+rder: 1px solid rgb(208, 215, 222); border-radius: 6px; font-size: 0.95rem;=
+ width: 140px; background: rgb(246, 248, 250); }
+
+input[type=3D"number"] { width: 90px; }
+
+button { padding: 0.5rem 1.25rem; background: rgb(9, 105, 218); color: rgb(=
+255, 255, 255); border-width: medium; border-style: none; border-color: cur=
+rentcolor; border-image: initial; border-radius: 6px; font-size: 0.95rem; c=
+ursor: pointer; font-weight: 600; white-space: nowrap; }
+
+button:hover:not(:disabled) { background: rgb(5, 80, 174); }
+
+button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.status-badge { display: inline-block; padding: 0.25rem 0.6rem; border-radi=
+us: 12px; font-size: 0.8rem; font-weight: 600; background: rgb(234, 238, 24=
+2); color: rgb(87, 96, 106); }
+
+.status-badge.streaming { background: rgb(218, 251, 225); color: rgb(17, 99=
+, 41); }
+
+.status-badge.done { background: rgb(221, 244, 255); color: rgb(5, 80, 174)=
+; }
+
+.status-badge.error { background: rgb(255, 235, 233); color: rgb(130, 7, 30=
+); }
+
+#output { white-space: pre-wrap; word-break: break-word; background: rgb(25=
+5, 255, 255); border: 1px solid rgb(208, 215, 222); border-radius: 8px; pad=
+ding: 1.25rem; min-height: 300px; font-size: 0.9rem; line-height: 1.6; font=
+-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace; }
+
+.placeholder { color: rgb(140, 149, 159); font-style: italic; }
+
+.hint { margin-top: 0.6rem; font-size: 0.8rem; color: rgb(140, 149, 159); }
+------MultipartBoundary--q6TBU6sH6tpRs0GSHjUKgpBii9p5JaEwLjMDDdwDVi------
