@@ -2,7 +2,7 @@
   "profiles": {
     "02 CliOutputSanitizer": {
       "commandName": "Project",
-      "workingDirectory": "Z:\\A\\tkopacz-fy26b\\fy26-githubCLISDK-demos\\shared\\CopilotSDK.Shared"
+      "workingDirectory": "..\\..\\..\\shared\\CopilotSDK.Shared"
     }
   }
 }
