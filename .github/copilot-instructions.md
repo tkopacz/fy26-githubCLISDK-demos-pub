@@ -82,7 +82,7 @@ Core SDK mental model reflected throughout:
 
 ## MCP servers
 
-`.vscode/mcp.json` configures two MCP servers matching the demos:
+`.mcp.json` configures two MCP servers matching the demos:
 - **github** (hosted HTTP, `https://api.githubcopilot.com/mcp/`) — used by demos 12 and 18, which
   otherwise drive the GitHub MCP server via `GITHUB_TOKEN`.
 - **filesystem** (`npx @modelcontextprotocol/server-filesystem`, scoped to the workspace) — the same
