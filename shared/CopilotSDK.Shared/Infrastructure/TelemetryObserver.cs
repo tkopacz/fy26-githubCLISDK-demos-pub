@@ -94,25 +94,34 @@ public sealed class TelemetryObserver : IDisposable, IAsyncDisposable
             if (fs.Length <= _position) return;
 
             fs.Seek(_position, SeekOrigin.Begin);
-            var toRead = (int)(fs.Length - _position);
-            var buffer = new byte[toRead];
-            var read = await fs.ReadAsync(buffer.AsMemory(0, toRead)).ConfigureAwait(false);
-            _position += read;
-
-            var chunk = _incomplete + Encoding.UTF8.GetString(buffer, 0, read);
-            var lines = chunk.Split('\n');
-            _incomplete = chunk.EndsWith('\n') ? string.Empty : lines[^1];
-            var count = chunk.EndsWith('\n') ? lines.Length : lines.Length - 1;
-
-            for (var i = 0; i < count; i++)
+            // Czytamy w ograniczonych porcjach (64 KB), aby uniknąć przepełnienia rzutowania na int
+            // oraz dużych alokacji bufora, gdy plik urośnie znacząco między odpytaniami. Pętla
+            // dociąga pozostałą część w kolejnych porcjach, aż dogonimy bieżącą długość pliku.
+            const int maxChunk = 64 * 1024;
+            while (fs.Length > _position)
             {
-                var line = lines[i].Trim('\r');
-                if (string.IsNullOrEmpty(line)) continue;
-                // Tylko rekordy zakresów (spans) stają się wartościami RpcEntry. Inne typy
-                // rekordów telemetrycznych są celowo ignorowane przez ParseSpan.
-                var entry = ParseSpan(line);
-                if (entry is not null)
-                    _channel.Writer.TryWrite(entry);
+                var available = fs.Length - _position;
+                var toRead = (int)Math.Min(available, maxChunk);
+                var buffer = new byte[toRead];
+                var read = await fs.ReadAsync(buffer.AsMemory(0, toRead)).ConfigureAwait(false);
+                if (read == 0) break;
+                _position += read;
+
+                var chunk = _incomplete + Encoding.UTF8.GetString(buffer, 0, read);
+                var lines = chunk.Split('\n');
+                _incomplete = chunk.EndsWith('\n') ? string.Empty : lines[^1];
+                var count = chunk.EndsWith('\n') ? lines.Length : lines.Length - 1;
+
+                for (var i = 0; i < count; i++)
+                {
+                    var line = lines[i].Trim('\r');
+                    if (string.IsNullOrEmpty(line)) continue;
+                    // Tylko rekordy zakresów (spans) stają się wartościami RpcEntry. Inne typy
+                    // rekordów telemetrycznych są celowo ignorowane przez ParseSpan.
+                    var entry = ParseSpan(line);
+                    if (entry is not null)
+                        _channel.Writer.TryWrite(entry);
+                }
             }
         }
         catch (IOException)

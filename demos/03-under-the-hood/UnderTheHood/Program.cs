@@ -160,4 +160,8 @@ ConsoleRenderer.Table(
     ("Wartość", x => x.Item2));
 
 ConsoleRenderer.Info("Plik trace: " + telemetryFilePath); //PS + cat aby pokazać
-CopilotClientFactory.DeleteTelemetryFile();
+
+// W trybie --capture-content trace zawiera treść promptów/odpowiedzi, więc usuwamy go po
+// wyświetleniu. W trybie domyślnym plik zostaje, aby umożliwić ręczne podejrzenie trace.
+if (captureContent)
+    CopilotClientFactory.DeleteTelemetryFile();

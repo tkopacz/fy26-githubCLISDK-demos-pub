@@ -77,9 +77,8 @@ public sealed class GitHubMemoryApiClient : IGitHubMemoryApiClient, IDisposable
 
     private static HttpClient CreateHttpClient(string token)
     {
-        /// Token jest używany tylko w przypadku wywołań REST usługi GitHub z tego pomocnika. To jest
-        /// nigdy nie przeszedł na model; Sesje SDK obsługują własne środowisko uwierzytelniania/wykonania
-        // channel separately.
+        // Token jest używany wyłącznie do wywołań REST usługi GitHub z tego pomocnika. Nigdy nie jest
+        // przekazywany do modelu; sesje SDK obsługują własny kanał uwierzytelniania/wykonania osobno.
         var http = new HttpClient { BaseAddress = new Uri("https://api.github.com") };
         http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));

@@ -2,7 +2,7 @@
   "profiles": {
     "CustomTools": {
       "commandName": "Project",
-      "commandLineArgs": "Z:\\A\\tkopacz-fy26b\\fy26-githubCLISDK-demos\\shared\\CopilotSDK.Shared\\CopilotSDK.Shared.csproj"
+      "commandLineArgs": "..\\..\\..\\shared\\CopilotSDK.Shared\\CopilotSDK.Shared.csproj"
     }
   }
 }
